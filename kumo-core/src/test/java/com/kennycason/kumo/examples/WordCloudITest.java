@@ -44,7 +44,8 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(20));
         wordCloud.setFontScalar(new LinearFontScalar(10, 40));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/wordcloud_circle.png");
+        wordCloud.writeRasterToFile("output/wordcloud_circle.png");
+        wordCloud.writeVectorToFile("output/wordcloud_circle.svg");
     }
 
     @Test
@@ -57,7 +58,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(20));
         wordCloud.setFontScalar(new LinearFontScalar(10, 40));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/wordcloud_rectangle2.png");
+        wordCloud.writeRasterToFile("output/wordcloud_rectangle2.png");
     }
 
     @Test
@@ -76,7 +77,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(5));
         wordCloud.setFontScalar(new LinearFontScalar(18, 70));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/wikipedia.png");
+        wordCloud.writeRasterToFile("output/wikipedia.png");
     }
 
     @Test
@@ -95,7 +96,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(5));
         wordCloud.setFontScalar(new LinearFontScalar(18, 70));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/cnn.png");
+        wordCloud.writeRasterToFile("output/cnn.png");
     }
 
     @Test
@@ -115,7 +116,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0x000000)));
         wordCloud.setFontScalar(new SqrtFontScalar(10, 50));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/whale_wordcloud_large_impact.png");
+        wordCloud.writeRasterToFile("output/whale_wordcloud_large_impact.png");
     }
 
     @Test
@@ -133,7 +134,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
         wordCloud.setFontScalar(new LinearFontScalar(10, 40));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/whale_wordcloud_small.png");
+        wordCloud.writeRasterToFile("output/whale_wordcloud_small.png");
     }
 
     @Test
@@ -147,12 +148,13 @@ public class WordCloudITest {
         final Dimension dimension = new Dimension(500, 312);
         final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.PIXEL_PERFECT);
         wordCloud.setPadding(2);
-        wordCloud.setAngleGenerator(new AngleGenerator(-90, 90, 10));
+        wordCloud.setAngleGenerator(new AngleGenerator(0, 90, 10));
         wordCloud.setBackground(new PixelBoundryBackground(getInputStream("backgrounds/whale_small.png")));
         wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
         wordCloud.setFontScalar(new LinearFontScalar(10, 30));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/whale_wordcloud_small_angles4.png");
+        wordCloud.writeRasterToFile("output/whale_wordcloud_small_angles4.png");
+        wordCloud.writeVectorToFile("output/whale_wordcloud_small_angles4.svg");
     }
 
     @Test
@@ -171,7 +173,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
         wordCloud.setFontScalar(new LinearFontScalar(20, 50));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/whale_wordcloud_large_angles2.png");
+        wordCloud.writeRasterToFile("output/whale_wordcloud_large_angles2.png");
     }
 
     @Test
@@ -191,7 +193,7 @@ public class WordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/datarank_wordcloud_circle_sqrt_font.png");
+        wordCloud.writeRasterToFile("output/datarank_wordcloud_circle_sqrt_font.png");
     }
 
     @Test
@@ -211,7 +213,7 @@ public class WordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/datarank_wordcloud_circle_large2.png");
+        wordCloud.writeRasterToFile("output/datarank_wordcloud_circle_large2.png");
     }
 
     @Test
@@ -232,7 +234,7 @@ public class WordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/earth_image_word_cloud_different_fonts.png");
+        wordCloud.writeRasterToFile("output/earth_image_word_cloud_different_fonts.png");
     }
 
     @Test
@@ -255,7 +257,7 @@ public class WordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/tidy_cat_litter_black_cat.png");
+        wordCloud.writeRasterToFile("output/tidy_cat_litter_black_cat.png");
     }
 
     @Test
@@ -274,7 +276,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(3));
         wordCloud.setFontScalar(new SqrtFontScalar(10, 50));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("/tmp/datarank_code.png");
+        wordCloud.writeRasterToFile("/tmp/datarank_code.png");
     }
 
     @Test
@@ -291,7 +293,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(20));
         wordCloud.setFontScalar(new LinearFontScalar(10, 100));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/wordcloud_large_code_circle.png");
+        wordCloud.writeRasterToFile("output/wordcloud_large_code_circle.png");
     }
 
     @Test
@@ -310,7 +312,7 @@ public class WordCloudITest {
         wordCloud.setKumoFont(new KumoFont("Helvitica", FontWeight.PLAIN));
         wordCloud.setFontScalar(new LinearFontScalar(8, 130));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/wordcloud_match_online_example.png");
+        wordCloud.writeRasterToFile("output/wordcloud_match_online_example.png");
     }
 
     @Test
@@ -327,7 +329,7 @@ public class WordCloudITest {
         wordCloud.setColorPalette(buildRandomColorPalette(4));
         wordCloud.setFontScalar(new LinearFontScalar(30, 60));
         wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("output/random_sample.png");
+        wordCloud.writeRasterToFile("output/random_sample.png");
     }
 
     private static ColorPalette buildRandomColorPalette(final int n) {

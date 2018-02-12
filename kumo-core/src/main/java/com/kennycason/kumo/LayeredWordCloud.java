@@ -100,7 +100,7 @@ public class LayeredWordCloud {
     }
 
     public Set<Word> getSkipped(final int layer) {
-        return wordClouds.get(layer).getSkipped();
+        return wordClouds.get(layer).getSkippedWords();
     }
 
     public void writeToFile(final String outputFileName) {

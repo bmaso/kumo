@@ -40,7 +40,7 @@ public class WordCloudNormalizersITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/kennycason_com_wordcloud_circle_uppercase.png");
+        wordCloud.writeRasterToFile("output/kennycason_com_wordcloud_circle_uppercase.png");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class WordCloudNormalizersITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/kennycason_com_wordcloud_circle_upsidedown.png");
+        wordCloud.writeRasterToFile("output/kennycason_com_wordcloud_circle_upsidedown.png");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class WordCloudNormalizersITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/kennycason_com_wordcloud_circle_hex.png");
+        wordCloud.writeRasterToFile("output/kennycason_com_wordcloud_circle_hex.png");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class WordCloudNormalizersITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/kennycason_com_wordcloud_circle_normalization_or_filter.png");
+        wordCloud.writeRasterToFile("output/kennycason_com_wordcloud_circle_normalization_or_filter.png");
     }
 
     @Test
@@ -115,7 +115,7 @@ public class WordCloudNormalizersITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/bubbletext.png");
+        wordCloud.writeRasterToFile("output/bubbletext.png");
     }
 
 }

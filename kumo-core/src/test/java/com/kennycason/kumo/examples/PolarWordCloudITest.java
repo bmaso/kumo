@@ -49,7 +49,7 @@ public class PolarWordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies, wordFrequencies2);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/polar_newyork_whale_large_blur.png");
+        wordCloud.writeRasterToFile("output/polar_newyork_whale_large_blur.png");
     }
 
     @Test
@@ -70,7 +70,7 @@ public class PolarWordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies, wordFrequencies2);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/polar_newyork_circle_blur_sqrt_font.png");
+        wordCloud.writeRasterToFile("output/polar_newyork_circle_blur_sqrt_font.png");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class PolarWordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies, wordFrequencies2);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/polar_newyork_rectangle_blur.png");
+        wordCloud.writeRasterToFile("output/polar_newyork_rectangle_blur.png");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PolarWordCloudITest {
         final long startTime = System.currentTimeMillis();
         wordCloud.build(wordFrequencies, wordFrequencies2);
         LOGGER.info("Took {}ms to build", System.currentTimeMillis() - startTime);
-        wordCloud.writeToFile("output/tidy_cat_litter_cat_shape3.png");
+        wordCloud.writeRasterToFile("output/tidy_cat_litter_cat_shape3.png");
 
         // horrible times, 400 words, total 800 words
         // pixel perfect

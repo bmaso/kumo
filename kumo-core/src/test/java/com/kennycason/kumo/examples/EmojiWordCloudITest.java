@@ -28,7 +28,7 @@ public class EmojiWordCloudITest {
         wordCloud.setKumoFont(new KumoFont(EmojiWordCloudITest.class.getResourceAsStream("/font/OpenSansEmoji.ttf")));
         wordCloud.setPadding(2);
         wordCloud.build(buildWordFrequencies());
-        wordCloud.writeToFile("output/wordcloud_emoji.png");
+        wordCloud.writeRasterToFile("output/wordcloud_emoji.png");
     }
 
     

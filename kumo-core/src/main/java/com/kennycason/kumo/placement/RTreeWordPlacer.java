@@ -34,7 +34,7 @@ public class RTreeWordPlacer implements RectangleWordPlacer {
         if (matches > 0) {
             return false;
         }
-        placedWordRTree = placedWordRTree.add(word.getWord(), wordRectangle);
+        placedWordRTree = placedWordRTree.add(word.getText(), wordRectangle);
         return true;
     }
 

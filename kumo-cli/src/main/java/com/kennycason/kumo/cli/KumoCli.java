@@ -140,7 +140,7 @@ public class KumoCli {
         wordCloud.setWordStartStrategy(buildWordStart(cliParameters.getWordStartType()));
         wordCloud.setKumoFont(buildKumoFont(cliParameters.getFontWeight()));
         wordCloud.build(loadFrequencies(cliParameters.getInputSources().get(0)), loadFrequencies(cliParameters.getInputSources().get(1)));
-        wordCloud.writeToFile(cliParameters.getOutputSource());
+        wordCloud.writeRasterToFile(cliParameters.getOutputSource());
     }
 
     private void buildStandardWordCloud() {
@@ -160,7 +160,7 @@ public class KumoCli {
         wordCloud.setWordStartStrategy(buildWordStart(cliParameters.getWordStartType()));
         wordCloud.setKumoFont(buildKumoFont(cliParameters.getFontWeight()));
         wordCloud.build(loadFrequencies(cliParameters.getInputSources().get(0)));
-        wordCloud.writeToFile(cliParameters.getOutputSource());
+        wordCloud.writeRasterToFile(cliParameters.getOutputSource());
     }
 
     private List<WordFrequency> loadFrequencies(final String input) {

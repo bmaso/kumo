@@ -1,5 +1,29 @@
 package com.kennycason.kumo;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.imageio.ImageIO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kennycason.kumo.bg.Background;
 import com.kennycason.kumo.bg.RectangleBackground;
 import com.kennycason.kumo.collide.RectanglePixelCollidable;
@@ -13,7 +37,6 @@ import com.kennycason.kumo.font.scale.FontScalar;
 import com.kennycason.kumo.font.scale.LinearFontScalar;
 import com.kennycason.kumo.image.AngleGenerator;
 import com.kennycason.kumo.image.CollisionRaster;
-import com.kennycason.kumo.image.ImageRotation;
 import com.kennycason.kumo.padding.Padder;
 import com.kennycason.kumo.padding.RectanglePadder;
 import com.kennycason.kumo.padding.WordPixelPadder;
@@ -22,17 +45,6 @@ import com.kennycason.kumo.placement.RTreeWordPlacer;
 import com.kennycason.kumo.placement.RectangleWordPlacer;
 import com.kennycason.kumo.wordstart.RandomWordStart;
 import com.kennycason.kumo.wordstart.WordStartStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.List;
 
 /**
  * Created by kenny on 6/29/14.
@@ -47,7 +59,8 @@ public class WordCloud {
     protected final CollisionRaster collisionRaster;
     protected final BufferedImage bufferedImage;
     protected final Padder padder;
-    protected final Set<Word> skipped = new HashSet<>();
+    protected final Set<Word> skippedWords = new HashSet<>();
+    protected final Set<Word> placedWords =  new HashSet<>();
     protected int padding;
     protected Background background;
     protected Color backgroundColor = Color.BLACK;
@@ -73,7 +86,8 @@ public class WordCloud {
         Collections.sort(wordFrequencies);
 
         wordPlacer.reset();
-        skipped.clear();
+        skippedWords.clear();
+        placedWords.clear();
 
         int currentWord = 1;
         for (final Word word : buildWords(wordFrequencies, this.colorPalette)) {
@@ -82,20 +96,21 @@ public class WordCloud {
 
             if (placed) {
                 if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("placed: {} ({}/{})", word.getWord(), currentWord, wordFrequencies.size());
+                    LOGGER.info("placed: {} ({}/{})", word.getText(), currentWord, wordFrequencies.size());
                 }
+                placedWords.add(word);
             } else {
                 if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("skipped: {} ({}/{})", word.getWord(), currentWord, wordFrequencies.size());
+                    LOGGER.info("skipped: {} ({}/{})", word.getText(), currentWord, wordFrequencies.size());
                 }
-                skipped.add(word);
+                skippedWords.add(word);
             }
             currentWord++;
         }
         drawForegroundToBackground();
     }
 
-    public void writeToFile(final String outputFileName) {
+    public void writeRasterToFile(final String outputFileName) {
         String extension = "";
         final int i = outputFileName.lastIndexOf('.');
         if (i > 0) {
@@ -116,7 +131,7 @@ public class WordCloud {
      * @param outputStream the output stream to write the image data to
      */
     public void writeToStreamAsPNG(final OutputStream outputStream) {
-        writeToStream("png", outputStream);
+        writeRasterToStream("png", outputStream);
     }
 
     /**
@@ -125,7 +140,7 @@ public class WordCloud {
      * @param format       the image format
      * @param outputStream the output stream to write image data to
      */
-    public void writeToStream(final String format, final OutputStream outputStream) {
+    public void writeRasterToStream(final String format, final OutputStream outputStream) {
         try {
             LOGGER.debug("Writing WordCloud image data to output stream");
             ImageIO.write(bufferedImage, format, outputStream);
@@ -135,6 +150,56 @@ public class WordCloud {
             LOGGER.error(e.getMessage(), e);
             throw new KumoException("Could not write wordcloud to outputstream due to an IOException", e);
         }
+    }
+    
+    /**
+     * Write SVG representation of the word cloud
+     */
+    public void writeVectorToStreamAsSVG(final OutputStream outputStream) {
+    	  PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, java.nio.charset.Charset.forName("UTF-8")));
+    	  
+    	  pw.println("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
+    	  "width=\"" + ((int)this.dimension.getWidth()) + "\" " +
+    	  "height=\"" + ((int)this.dimension.getHeight()) + "\" " +
+    	  "style=\"background: rgb(" + this.backgroundColor.getRed() + "," + this.backgroundColor.getGreen() + "," + this.backgroundColor.getBlue() + ");\">");
+    	  for(Word word : placedWords) {
+    		double sin = Math.sin((Math.PI/2) - word.getTheta());
+    		double cos = Math.cos((Math.PI/2) - word.getTheta());
+    		int rotationAngle = ((int)(word.getTheta() * 180/Math.PI));
+    		
+    	  	pw.println("<g transform=\"translate(" + word.getPosition().x + "," + word.getPosition().y + ")\">");
+    	  	pw.println("  <g transform=\"translate(" + ((int)(cos * word.getFontMetrics().getDescent())) + "," + ((int)(sin * word.getFontMetrics().getAscent())) + ")\">");
+    	  	pw.println("    <g transform=\"rotate(" + rotationAngle + ")\">");
+    	  	pw.println("      <text fill=\"rgb(" + word.getColor().getRed() + "," + word.getColor().getGreen() + "," + word.getColor().getBlue() + ")\" " +
+    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "px\" " +
+    	  			"font-family=\"" + word.getFontMetrics().getFont().getFontName() + "\" " +
+    	  			"font-weight=\"bold\" " +
+    	  			"transform=\"translate(" + word.getPadding() + "," + word.getPadding() + ")\">" +
+    	  			word.getText() + "</text>");
+    	  	pw.println("    </g>");
+    	  	pw.println("  </g>");
+    	  	pw.println("</g>");
+    	  }
+    	  pw.println("</svg>");
+    	  
+    	  pw.close();
+    }
+    
+    /**
+     * Write SVG representation of the word cloud to a local file
+     */
+    public void writeVectorToFile(final String outputFileName) {
+    	  FileOutputStream fos = null;
+    	  try {
+    		fos = new FileOutputStream(outputFileName);
+    	    writeVectorToStreamAsSVG(fos);
+    	  } catch (final IOException ioe) {
+        LOGGER.error(ioe.getMessage(), ioe);
+        throw new KumoException("Could not write wordcloud as SVG to file " + outputFileName + " due to an IOException", ioe);
+    	  } finally {
+    		if(fos != null)
+    		  try { fos.close(); } catch (Throwable t) {}
+    	  }
     }
 
     /**
@@ -191,6 +256,7 @@ public class WordCloud {
                 if (placed) {
                     collisionRaster.mask(word.getCollisionRaster(), word.getPosition());
                     graphics.drawImage(word.getBufferedImage(), word.getPosition().x, word.getPosition().y, null);
+                    placedWords.add(word);
                     return true;
                 }
 
@@ -232,12 +298,9 @@ public class WordCloud {
         final Font font = kumoFont.getFont().deriveFont(fontHeight);
         final FontMetrics fontMetrics = graphics.getFontMetrics(font);
         final Word word = new Word(wordFrequency.getWord(), colorPalette.next(), fontMetrics, this.collisionChecker);
-        final double theta = angleGenerator.randomNext();
-        if (theta != 0.0) {
-            word.setBufferedImage(ImageRotation.rotate(word.getBufferedImage(), theta));
-        }
+        word.setTheta(angleGenerator.randomNext());
         if (padding > 0) {
-            padder.pad(word, padding);
+            word.padWith(padder, padding);
         }
         return word;
     }
@@ -300,8 +363,12 @@ public class WordCloud {
         return bufferedImage;
     }
 
-    public Set<Word> getSkipped() {
-        return skipped;
+    public Set<Word> getSkippedWords() {
+        return skippedWords;
+    }
+    
+    public Set<Word> getPlacedWords() {
+    	  return placedWords;
     }
     
     public void setWordStartStrategy(final WordStartStrategy startscheme) {

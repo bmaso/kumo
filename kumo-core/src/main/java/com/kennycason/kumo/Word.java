@@ -3,6 +3,8 @@ package com.kennycason.kumo;
 import com.kennycason.kumo.collide.checkers.CollisionChecker;
 import com.kennycason.kumo.collide.Collidable;
 import com.kennycason.kumo.image.CollisionRaster;
+import com.kennycason.kumo.image.ImageRotation;
+import com.kennycason.kumo.padding.Padder;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,11 +16,17 @@ public class Word implements Collidable {
 
     private final CollisionChecker collisionChecker;
 
-    private final String word;
+    private final String text;
 
     private final Color color;
+    
+    private final FontMetrics fontMetrics;
 
     private final Point position = new Point(0, 0);
+    
+    private double theta = 0.0;
+    
+    private int padding = 0;
 
     private BufferedImage bufferedImage;
 
@@ -26,10 +34,11 @@ public class Word implements Collidable {
 
     public Word(final String word,
                 final Color color,
-                final FontMetrics fontMetrics,
+                final FontMetrics fm,
                 final CollisionChecker collisionChecker) {
-        this.word = word;
+        this.text = word;
         this.color = color;
+        this.fontMetrics = fm;
         this.collisionChecker = collisionChecker;
         // get the height of a line of text in this font and render context
         final int maxDescent = fontMetrics.getMaxDescent();
@@ -58,8 +67,12 @@ public class Word implements Collidable {
         this.collisionRaster = new CollisionRaster(bufferedImage);
     }
 
-    public String getWord() {
-        return word;
+    public String getText() {
+        return text;
+    }
+    
+    public Color getColor() {
+    		return this.color;
     }
 
     public Point getPosition() {
@@ -68,6 +81,29 @@ public class Word implements Collidable {
 
     public Dimension getDimension() {
         return collisionRaster.getDimension();
+    }
+    
+    public double getTheta() {
+    	  return theta;
+    }
+    
+    public void setTheta(double newTheta) {
+    	  this.theta = newTheta;
+    	  this.bufferedImage = ImageRotation.rotate(this.bufferedImage, theta);
+    }
+    
+    public void padWith(Padder padder, int newPadding) {
+    	  int padDelta = newPadding - this.padding;
+    	  this.padding = newPadding;
+    	  padder.pad(this, padDelta);
+    }
+    
+    public int getPadding() {
+    	  return this.padding;
+    }
+    
+    public FontMetrics getFontMetrics() {
+    	  return this.fontMetrics;
     }
 
     @Override
@@ -86,13 +122,18 @@ public class Word implements Collidable {
 
     @Override
     public String toString() {
-        return "WordRectangle{" +
-                "word='" + word + '\'' +
+        return "Word {" +
+                "text='" + text + '\'' +
                 ", color=" + color +
                 ", x=" + position.x +
                 ", y=" + position.y +
+                ", str_width=" + fontMetrics.stringWidth(text) +
+                ", str_height=" + fontMetrics.getHeight() +
+                ", theta=" + theta +
+                ", padding=" + padding +
                 ", width=" + bufferedImage.getWidth() +
                 ", height=" + bufferedImage.getHeight() +
+                ", fontMetrics=" + fontMetrics +
                 '}';
     }
 
