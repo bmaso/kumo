@@ -148,7 +148,7 @@ public class WordCloudITest {
         final Dimension dimension = new Dimension(500, 312);
         final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.PIXEL_PERFECT);
         wordCloud.setPadding(2);
-        wordCloud.setAngleGenerator(new AngleGenerator(0, 90, 10));
+        wordCloud.setAngleGenerator(new AngleGenerator(-90, 90, 10));
         wordCloud.setBackground(new PixelBoundryBackground(getInputStream("backgrounds/whale_small.png")));
         wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
         wordCloud.setFontScalar(new LinearFontScalar(10, 30));

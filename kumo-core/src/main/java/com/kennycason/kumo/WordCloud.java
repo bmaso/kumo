@@ -163,19 +163,32 @@ public class WordCloud {
     	  "height=\"" + ((int)this.dimension.getHeight()) + "\" " +
     	  "style=\"background: rgb(" + this.backgroundColor.getRed() + "," + this.backgroundColor.getGreen() + "," + this.backgroundColor.getBlue() + ");\">");
     	  for(Word word : placedWords) {
-    		double sin = Math.sin((Math.PI/2) - word.getTheta());
-    		double cos = Math.cos((Math.PI/2) - word.getTheta());
+    		double sin = Math.sin(word.getTheta());
+    		double cos = Math.cos(word.getTheta());
     		int rotationAngle = ((int)(word.getTheta() * 180/Math.PI));
     		
     	  	pw.println("<g transform=\"translate(" + word.getPosition().x + "," + word.getPosition().y + ")\">");
-    	  	pw.println("  <g transform=\"translate(" + ((int)(cos * word.getFontMetrics().getDescent())) + "," + ((int)(sin * word.getFontMetrics().getAscent())) + ")\">");
+    	  	if(word.getTheta() > 0) {
+    	  		pw.println("  <g transform=\"translate(" + ((int)(sin * word.getFontMetrics().getDescent())) + "," + ((int)(cos * word.getFontMetrics().getAscent())) + ")\">");
+    	  	} else {
+    	  		pw.println("  <g transform=\"translate(" + ((int)(-sin * word.getFontMetrics().getAscent())) + "," + ((int)(word.getDimension().getHeight() - (cos * word.getFontMetrics().getDescent()))) + ")\">");
+    	  	}
     	  	pw.println("    <g transform=\"rotate(" + rotationAngle + ")\">");
-    	  	pw.println("      <text fill=\"rgb(" + word.getColor().getRed() + "," + word.getColor().getGreen() + "," + word.getColor().getBlue() + ")\" " +
-    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "px\" " +
-    	  			"font-family=\"" + word.getFontMetrics().getFont().getFontName() + "\" " +
-    	  			"font-weight=\"bold\" " +
-    	  			"transform=\"translate(" + word.getPadding() + "," + word.getPadding() + ")\">" +
-    	  			word.getText() + "</text>");
+    	  	if(word.getTheta() > 0) {
+	    	  	pw.println("      <text fill=\"rgb(" + word.getColor().getRed() + "," + word.getColor().getGreen() + "," + word.getColor().getBlue() + ")\" " +
+	    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "px\" " +
+	    	  			"font-family=\"" + word.getFontMetrics().getFont().getFontName() + "\" " +
+	    	  			"font-weight=\"bold\" " +
+	    	  			"transform=\"translate(" + word.getPadding() + "," + word.getPadding() + ")\">" +
+	    	  			word.getText() + "</text>");
+    	  	} else {
+	    	  	pw.println("      <text fill=\"rgb(" + word.getColor().getRed() + "," + word.getColor().getGreen() + "," + word.getColor().getBlue() + ")\" " +
+	    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "px\" " +
+	    	  			"font-family=\"" + word.getFontMetrics().getFont().getFontName() + "\" " +
+	    	  			"font-weight=\"bold\" " +
+	    	  			"transform=\"translate(" + word.getPadding() + "," + -word.getPadding() + ")\">" +
+	    	  			word.getText() + "</text>");
+    	  	}
     	  	pw.println("    </g>");
     	  	pw.println("  </g>");
     	  	pw.println("</g>");
