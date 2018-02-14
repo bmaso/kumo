@@ -159,8 +159,7 @@ public class WordCloud {
     	  PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, java.nio.charset.Charset.forName("UTF-8")));
     	  
     	  pw.println("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
-    	  "width=\"" + ((int)this.dimension.getWidth()) + "\" " +
-    	  "height=\"" + ((int)this.dimension.getHeight()) + "\" " +
+    	  "viewBox=\"0 0 " + ((int)this.dimension.getWidth()) + " " + ((int)this.dimension.getHeight()) + "\" " +
     	  "style=\"background: rgb(" + this.backgroundColor.getRed() + "," + this.backgroundColor.getGreen() + "," + this.backgroundColor.getBlue() + ");\">");
     	  for(Word word : placedWords) {
     		double sin = Math.sin(word.getTheta());
@@ -176,7 +175,7 @@ public class WordCloud {
     	  	pw.println("    <g transform=\"rotate(" + rotationAngle + ")\">");
     	  	if(word.getTheta() > 0) {
 	    	  	pw.println("      <text fill=\"rgb(" + word.getColor().getRed() + "," + word.getColor().getGreen() + "," + word.getColor().getBlue() + ")\" " +
-	    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "px\" " +
+	    	  			"font-size=\"" + word.getFontMetrics().getFont().getSize() + "\" " +
 	    	  			"font-family=\"" + word.getFontMetrics().getFont().getFontName() + "\" " +
 	    	  			"font-weight=\"bold\" " +
 	    	  			"transform=\"translate(" + word.getPadding() + "," + word.getPadding() + ")\">" +
